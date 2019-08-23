@@ -1,23 +1,23 @@
 <template>
   <div class="calculator">
     <Display value="10000" />
-    <Button triple label="AC" />
-    <Button operation label="/" />
-    <Button label="7" />
-    <Button label="8" />
-    <Button label="9" />
-    <Button operation label="x" />
-    <Button label="4" />
-    <Button label="5" />
-    <Button label="6" />
-    <Button operation label="-" />
-    <Button label="1" />
-    <Button label="2" />
-    <Button label="3" />
-    <Button operation label="+" />
-    <Button double label="0" />
-    <Button label="." />
-    <Button label="=" operation />
+    <Button triple label="AC" @onCalcButtonClick="clearMemory" />
+    <Button operation label="/" @onCalcButtonClick="setOperation" />
+    <Button label="7" @onCalcButtonClick="addDigit" />
+    <Button label="8" @onCalcButtonClick="addDigit" />
+    <Button label="9" @onCalcButtonClick="addDigit" />
+    <Button operation label="x" @onCalcButtonClick="setOperation" />
+    <Button label="4" @onCalcButtonClick="addDigit" />
+    <Button label="5" @onCalcButtonClick="addDigit" />
+    <Button label="6" @onCalcButtonClick="addDigit" />
+    <Button operation label="-" @onCalcButtonClick="setOperation" />
+    <Button label="1" @onCalcButtonClick="addDigit" />
+    <Button label="2" @onCalcButtonClick="addDigit" />
+    <Button label="3" @onCalcButtonClick="addDigit" />
+    <Button operation label="+" @onCalcButtonClick="setOperation" />
+    <Button double label="0" @onCalcButtonClick="addDigit" />
+    <Button label="." @onCalcButtonClick="addDigit" />
+    <Button label="=" operation @onCalcButtonClick="setOperation" />
   </div>
 </template>
 
@@ -28,6 +28,17 @@ export default {
   components: {
     Button,
     Display
+  },
+  methods: {
+    clearMemory() {
+      console.log("Limpar memória!");
+    },
+    setOperation(o) {
+      console.log(`Operação ${o}`);
+    },
+    addDigit(d) {
+      console.log(`Digito ${d}`);
+    }
   }
 };
 </script>
