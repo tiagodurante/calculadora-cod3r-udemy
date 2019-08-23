@@ -1,12 +1,12 @@
 <template>
   <div class="calculator">
-    <Display value="10000" />
+    <Display :value="displayValue" />
     <Button triple label="AC" @onCalcButtonClick="clearMemory" />
     <Button operation label="/" @onCalcButtonClick="setOperation" />
     <Button label="7" @onCalcButtonClick="addDigit" />
     <Button label="8" @onCalcButtonClick="addDigit" />
     <Button label="9" @onCalcButtonClick="addDigit" />
-    <Button operation label="x" @onCalcButtonClick="setOperation" />
+    <Button operation label="*" @onCalcButtonClick="setOperation" />
     <Button label="4" @onCalcButtonClick="addDigit" />
     <Button label="5" @onCalcButtonClick="addDigit" />
     <Button label="6" @onCalcButtonClick="addDigit" />
@@ -25,19 +25,58 @@
 import Button from "@/components/Button";
 import Display from "@/components/Display";
 export default {
+  data: () => {
+    return {
+      displayValue: 0,
+      clearDisplay: false,
+      operation: null,
+      values: [0, 0],
+      current: 0
+    };
+  },
   components: {
     Button,
     Display
   },
   methods: {
     clearMemory() {
-      console.log("Limpar memória!");
+      Object.assign(this.$data, this.$options.data());
     },
     setOperation(o) {
-      console.log(`Operação ${o}`);
+      if (this.current === 0) {
+        this.operation = o;
+        this.current = 1;
+        this.clearDisplay = true;
+      } else {
+        const equals = o === "=";
+        const currentOperation = this.operation;
+
+        try {
+          this.values[0] = eval(
+            `${this.values[0]} ${currentOperation} ${this.values[1]}`
+          );
+        } catch (e) {
+          this.$emit("onError", e);
+        }
+
+        this.values[1] = 0;
+        this.displayValue = this.values[0];
+        this.operation = equals ? null : o;
+        this.current = equals ? 0 : 1;
+        this.clearDisplay = !equals;
+      }
     },
-    addDigit(d) {
-      console.log(`Digito ${d}`);
+    addDigit(n) {
+      if (n === "." && this.displayValue.includes(".")) {
+        return;
+      }
+
+      const clearDisplay = this.displayValue === 0 || this.clearDisplay;
+      const currentValue = clearDisplay ? "" : this.displayValue;
+      const displayValue = currentValue + n;
+      this.displayValue = displayValue;
+      this.clearDisplay = false;
+      this.values[this.current] = displayValue;
     }
   }
 };
